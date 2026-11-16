@@ -1,0 +1,78 @@
+---
+name: "Vibe Terminal"
+description: "Web terminal with Mistral Vibe and full Home Assistant access"
+version: "0.1.0"
+slug: "vibe_terminal"
+init: false
+
+# Built locally by the Supervisor from the Dockerfile (no prebuilt image).
+# Mistral Vibe ships glibc (manylinux) wheels only, so the image is based on
+# Home Assistant's Debian base, not Alpine.
+arch:
+  - aarch64
+  - amd64
+
+url: "https://github.com/reuten75/vibe-terminal-homeassistant-addon"
+
+# Web interface through Home Assistant ingress
+ingress: true
+ingress_port: 7681
+panel_icon: mdi:console
+panel_title: "Vibe Terminal"
+panel_admin: true
+
+# Unset by default: ingress reaches the terminal through nginx, which admits
+# only the Supervisor (172.30.32.2). Publishing 7681 opens it to every client.
+ports:
+  7681/tcp: null
+ports_description:
+  7681/tcp: "Direct web terminal access. Not needed for ingress and NOT password-protected: anyone who can reach this port gets a root shell in the container. Leave unset unless the port is firewalled."
+
+options:
+  auto_launch_vibe: true
+  vibe_auto_update: true
+  working_directory: ""
+  mistral_api_key: ""
+  auto_approve: false
+  vibe_extra_args: ""
+  ha_smart_context: true
+  enable_ha_mcp: true
+  ha_mcp_version: "7.11.0"
+  persistent_apt_packages: []
+  persistent_pip_packages: []
+schema:
+  auto_launch_vibe: bool?
+  vibe_auto_update: bool?
+  working_directory: str?
+  mistral_api_key: password?
+  auto_approve: bool?
+  vibe_extra_args: str?
+  ha_smart_context: bool?
+  enable_ha_mcp: bool?
+  ha_mcp_version: str?
+  persistent_apt_packages:
+    - str
+  persistent_pip_packages:
+    - str
+
+# Rebuilt or re-downloaded on demand; keep them out of HA backups.
+backup_exclude:
+  - "*_vibe_terminal/.cache"
+  - "*_vibe_terminal/uv-tools"
+  - "*_vibe_terminal/home/.local/bin/vibe"
+  - "*_vibe_terminal/home/.local/bin/vibe-acp"
+
+map:
+  - config:rw            # Home Assistant configuration files
+  - all_addon_configs:rw # Other add-ons' config directories (/addon_configs)
+  - share:rw             # Shared folder between add-ons and HA
+
+# hassio_api + manager role: /addons (HA Smart Context lists add-ons)
+# homeassistant_api: the /core/api/* proxy used by ha-context and ha-mcp
+hassio_api: true
+hassio_role: manager
+homeassistant_api: true
+
+startup: services
+
+webui: http://[HOST]:[PORT:7681]/
