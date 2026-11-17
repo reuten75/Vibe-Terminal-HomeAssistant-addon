@@ -54,7 +54,8 @@ setup_commands() {
         "welcome:/opt/scripts/welcome.sh" \
         "ha-context:/opt/scripts/ha-context.sh" \
         "ha-mcp-launch:/opt/scripts/ha-mcp-launch.sh" \
-        "persist-install:/opt/scripts/persist-install.sh"; do
+        "persist-install:/opt/scripts/persist-install.sh" \
+        "xdg-open:/opt/scripts/xdg-open.sh"; do
         name="${entry%%:*}"
         script="${entry#*:}"
         if [ -f "$script" ]; then
@@ -65,7 +66,7 @@ setup_commands() {
         fi
     done
 
-    bashio::addon.version > /opt/scripts/addon-version 2>/dev/null \
+    bashio::app.version > /opt/scripts/addon-version 2>/dev/null \
         || echo "unknown" > /opt/scripts/addon-version
 }
 
@@ -184,7 +185,7 @@ export_mistral_api_key() {
     elif [ -f "$VIBE_HOME/.env" ] && grep -q '^MISTRAL_API_KEY=' "$VIBE_HOME/.env" 2>/dev/null; then
         bashio::log.info "Using the Mistral key saved by 'Sign in with Mistral' (${VIBE_HOME}/.env)"
     else
-        bashio::log.info "Not signed in yet: open the terminal and choose 'Sign in with Mistral'"
+        bashio::log.info "Not signed in yet: open the terminal and choose 'Launch browser' (the link arrives as an HA notification)"
     fi
 }
 
@@ -254,7 +255,7 @@ start_ingress_proxy() {
         allow_all=true
         bashio::log.info "No Supervisor: web terminal reachable from any address (local test run)"
     else
-        host_port=$(bashio::addon.port 7681/tcp 2>/dev/null) || host_port=""
+        host_port=$(bashio::app.port 7681/tcp 2>/dev/null) || host_port=""
         if [[ "$host_port" =~ ^[0-9]+$ ]]; then
             allow_all=true
             bashio::log.warning "Port 7681 is published on the host (${host_port}): anyone who can reach it gets a root shell with no login"
@@ -297,6 +298,10 @@ start_web_terminal() {
 
     bashio::log.info "Starting web terminal on loopback port ${port}, served on 7681 via nginx"
 
+    # rendererType=dom: in testing, ttyd's canvas/WebGL renderers drew
+    # Vibe's full-screen UI scaled and shifted at device pixel ratio 2
+    # (HiDPI/phones), while the DOM renderer drew it correctly.
+    #
     # Dark palette with Mistral orange accents
     local ttyd_theme='{"background":"#1a1b26","foreground":"#c0caf5","cursor":"#fa500f","cursorAccent":"#1a1b26","selectionBackground":"#33467c","selectionForeground":"#c0caf5","black":"#15161e","red":"#f7768e","green":"#9ece6a","yellow":"#e0af68","blue":"#7aa2f7","magenta":"#bb9af7","cyan":"#7dcfff","white":"#a9b1d6","brightBlack":"#414868","brightRed":"#f7768e","brightGreen":"#9ece6a","brightYellow":"#e0af68","brightBlue":"#7aa2f7","brightMagenta":"#bb9af7","brightCyan":"#7dcfff","brightWhite":"#c0caf5"}'
 
@@ -319,6 +324,7 @@ start_web_terminal() {
         --client-option reconnectInterval=5 \
         --client-option "theme=${ttyd_theme}" \
         --client-option fontSize=14 \
+        --client-option rendererType=dom \
         --client-option macOptionClickForcesSelection=true \
         "${index_args[@]}" \
         tmux new-session -A -s "$SESSION_NAME" -c "$workdir" "$session_command"

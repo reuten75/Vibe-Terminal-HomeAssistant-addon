@@ -28,10 +28,23 @@ RUN apt-get update \
         python3-yaml \
         tmux \
         tree \
-        ttyd \
         vim \
         wget \
     && rm -rf /var/lib/apt/lists/*
+
+# ttyd is not packaged in Debian trixie: use the upstream static binary,
+# pinned and checksum-verified (SHA256SUMS of the 1.7.7 release).
+ARG TTYD_VERSION=1.7.7
+RUN case "$(dpkg --print-architecture)" in \
+        amd64) ttyd_asset="ttyd.x86_64"; ttyd_sha="8a217c968aba172e0dbf3f34447218dc015bc4d5e59bf51db2f2cd12b7be4f55" ;; \
+        arm64) ttyd_asset="ttyd.aarch64"; ttyd_sha="b38acadd89d1d396a0f5649aa52c539edbad07f4bc7348b27b4f4b7219dd4165" ;; \
+        *) echo "Unsupported architecture: $(dpkg --print-architecture)" >&2; exit 1 ;; \
+    esac \
+    && curl -fsSL -o /usr/local/bin/ttyd \
+        "https://github.com/tsl0922/ttyd/releases/download/${TTYD_VERSION}/${ttyd_asset}" \
+    && echo "${ttyd_sha}  /usr/local/bin/ttyd" | sha256sum -c - \
+    && chmod 0755 /usr/local/bin/ttyd \
+    && ttyd --version
 
 # uv runs ha-mcp (uvx) and installs/updates Mistral Vibe
 RUN pip3 install --no-cache-dir --break-system-packages uv==0.11.28

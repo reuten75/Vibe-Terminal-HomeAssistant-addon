@@ -6,7 +6,7 @@ Mistral Vibe i en webbterminal (ttyd + tmux) som Home Assistant-add-on, med din 
 
 1. Starta add-onet och öppna **Vibe Terminal** i sidomenyn.
 2. Vibe startar automatiskt i `/config`. Första gången:
-   - välj **Sign in with Mistral**. Vibe visar en inloggningslänk. Kopiera den (tangenten som visas i Vibe, eller markera med musen) och öppna den i valfri webbläsare. Logga in med ditt Mistral-konto, så fortsätter Vibe automatiskt när inloggningen är klar.
+   - välj **Launch browser → Mistral AI**. Det finns ingen webbläsare i add-onet, så länken dyker i stället upp som en **notis i Home Assistant** (klockikonen i sidomenyn). Klicka på **Open link**, logga in med ditt Mistral-konto och gå tillbaka till Vibe Terminal, där Vibe fortsätter automatiskt. Du kan också använda kopieringstangenten som Vibe visar för att kopiera länken.
    - godkänn att Vibe får arbeta i mappen `/config` (en gång per mapp).
 3. Be Vibe om det du vill, till exempel *"Skapa en automation som tänder hallen vid solnedgång"* eller *"Varför startar inte min automation för värmepumpen?"*.
 

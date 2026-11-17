@@ -10,6 +10,6 @@ Bygger på [Claude Terminal](https://github.com/heytcass/home-assistant-addons) 
 2. Menyn med tre punkter uppe till höger → **Repositories**
 3. Lägg till `https://github.com/reuten75/vibe-terminal-homeassistant-addon`
 4. Installera **Vibe Terminal** och starta det. Första bygget sker lokalt på din HA och tar några minuter.
-5. Öppna **Vibe Terminal** i sidomenyn och välj **Sign in with Mistral**
+5. Öppna **Vibe Terminal** i sidomenyn och välj **Launch browser → Mistral AI**. Inloggningslänken kommer som en notis i Home Assistant (klockikonen).
 
 Se [vibe-terminal/DOCS.md](vibe-terminal/DOCS.md) för inställningar och detaljer.
