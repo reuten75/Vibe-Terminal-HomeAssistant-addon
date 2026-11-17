@@ -1,15 +1,21 @@
-# Vibe Terminal för Home Assistant
+# Vibe Terminal for Home Assistant
 
-Ett Home Assistant-add-on som kör [Mistral Vibe](https://github.com/mistralai/mistral-vibe) i en webbterminal direkt i HA:s sidomeny. Vibe kan läsa och ändra din konfiguration i `/config` och styra Home Assistant via [ha-mcp](https://github.com/homeassistant-ai/ha-mcp), så att den kan skriva automationer, felsöka och mycket mer.
+A Home Assistant add-on that runs [Mistral Vibe](https://github.com/mistralai/mistral-vibe) in a web terminal, right in the Home Assistant sidebar. Vibe can read and edit your configuration in `/config` and control Home Assistant through [ha-mcp](https://github.com/homeassistant-ai/ha-mcp), so it can write automations, troubleshoot problems and much more.
 
-Bygger på [Claude Terminal](https://github.com/heytcass/home-assistant-addons) av heytcass (MIT) men använder Mistral Vibe i stället för Claude Code.
+Based on [Claude Terminal](https://github.com/heytcass/home-assistant-addons) by heytcass (MIT), with Mistral Vibe instead of Claude Code.
 
 ## Installation
 
-1. I Home Assistant: **Inställningar → Tillägg (Apps) → Tilläggsbutik**
-2. Menyn med tre punkter uppe till höger → **Repositories**
-3. Lägg till `https://github.com/reuten75/vibe-terminal-homeassistant-addon`
-4. Installera **Vibe Terminal** och starta det. Första bygget sker lokalt på din HA och tar några minuter.
-5. Öppna **Vibe Terminal** i sidomenyn och välj **Launch browser → Mistral AI**. Inloggningslänken kommer som en notis i Home Assistant (klockikonen).
+1. In Home Assistant, go to **Settings → Add-ons (Apps) → Add-on Store**
+2. Open the three-dot menu in the top-right corner → **Repositories**
+3. Add `https://github.com/reuten75/vibe-terminal-homeassistant-addon`
+4. Install **Vibe Terminal** and start it. The first build runs locally on your Home Assistant and takes several minutes.
+5. Open **Vibe Terminal** from the sidebar and choose **Launch browser → Mistral AI**. The sign-in link arrives as a Home Assistant notification (the bell icon).
 
-Se [vibe-terminal/DOCS.md](vibe-terminal/DOCS.md) för inställningar och detaljer.
+Supported architectures: `amd64` and `aarch64` (for example Raspberry Pi 4/5, ODROID-N2, Home Assistant Green/Yellow).
+
+See [vibe-terminal/DOCS.md](vibe-terminal/DOCS.md) for options and details.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

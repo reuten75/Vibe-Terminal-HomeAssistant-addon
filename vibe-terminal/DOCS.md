@@ -1,71 +1,71 @@
 # Vibe Terminal
 
-Mistral Vibe i en webbterminal (ttyd + tmux) som Home Assistant-add-on, med din HA-konfiguration monterad och full åtkomst till Home Assistant via ha-mcp.
+Mistral Vibe in a web terminal (ttyd + tmux) as a Home Assistant add-on, with your Home Assistant configuration mounted and full access to Home Assistant through ha-mcp.
 
-## Kom igång
+## Getting started
 
-1. Starta add-onet och öppna **Vibe Terminal** i sidomenyn.
-2. Vibe startar automatiskt i `/config`. Första gången:
-   - välj **Launch browser → Mistral AI**. Det finns ingen webbläsare i add-onet, så länken dyker i stället upp som en **notis i Home Assistant** (klockikonen i sidomenyn). Klicka på **Open link**, logga in med ditt Mistral-konto och gå tillbaka till Vibe Terminal, där Vibe fortsätter automatiskt. Du kan också använda kopieringstangenten som Vibe visar för att kopiera länken.
-   - godkänn att Vibe får arbeta i mappen `/config` (en gång per mapp).
-3. Be Vibe om det du vill, till exempel *"Skapa en automation som tänder hallen vid solnedgång"* eller *"Varför startar inte min automation för värmepumpen?"*.
+1. Start the add-on and open **Vibe Terminal** from the sidebar.
+2. Vibe starts automatically in `/config`. The first time:
+   - choose **Launch browser → Mistral AI**. There is no browser inside the add-on, so the link appears as a **Home Assistant notification** instead (the bell icon in the sidebar). Click **Open link**, sign in with your Mistral account and go back to Vibe Terminal, where Vibe continues automatically. You can also use the copy key that Vibe shows to copy the link.
+   - allow Vibe to work in the `/config` folder (asked once per folder).
+3. Ask Vibe for what you need, for example *"Create an automation that turns on the hallway light at sunset"* or *"Why doesn't my heat pump automation trigger?"*.
 
-Inloggningen sparas som `MISTRAL_API_KEY` i `/data/vibe/.env` och finns kvar efter omstarter och uppdateringar. Filen ingår i Home Assistants säkerhetskopior.
+The sign-in is stored as `MISTRAL_API_KEY` in `/data/vibe/.env` and survives restarts and updates. The file is included in Home Assistant backups.
 
-## Inställningar
+## Options
 
-| Inställning | Standard | Beskrivning |
+| Option | Default | Description |
 |---|---|---|
-| `auto_launch_vibe` | `true` | Starta Vibe direkt när terminalen öppnas. `false` ger ett skal där du kör `vibe` själv. |
-| `vibe_auto_update` | `true` | Installerar och uppdaterar Mistral Vibe i `/data` i bakgrunden vid varje start. Versionen i imagen är 3.1.2 och används som reserv. |
-| `working_directory` | `""` | Mapp att starta i (standard `/config`). |
-| `mistral_api_key` | `""` | Valfri nyckel i stället för kontoinloggningen. Om fältet är ifyllt används nyckeln före den sparade inloggningen. Den maskeras i gränssnittet men ingår i säkerhetskopior. |
-| `auto_approve` | `false` | Startar Vibe med `--auto-approve`, så att alla verktygsanrop körs utan fråga. **Se säkerhetsavsnittet nedan.** |
-| `vibe_extra_args` | `""` | Extra flaggor till `vibe`, t.ex. `--agent plan`. Citattecken fungerar som i ett skal. |
-| `ha_smart_context` | `true` | Skriver `/data/vibe/AGENTS.md` med fakta om din HA (version, entiteter per domän, add-ons, senaste fel). Vibe läser filen i varje session. Kör `ha-context` för att uppdatera den, eller `ha-context --full` för att även lista entitets-ID:n. |
-| `enable_ha_mcp` | `true` | Registrerar ha-mcp som MCP-server `home_assistant` i Vibes `config.toml`. Med `false` tas posten bort. |
-| `ha_mcp_version` | `"7.11.0"` | Vilken version av ha-mcp som körs. |
-| `persistent_apt_packages` | `[]` | Debian-paket som installeras vid varje start. |
-| `persistent_pip_packages` | `[]` | Python-paket som installeras vid varje start. |
+| `auto_launch_vibe` | `true` | Start Vibe as soon as the terminal opens. `false` gives you a shell where you run `vibe` yourself. |
+| `vibe_auto_update` | `true` | Installs and updates Mistral Vibe in `/data` in the background on every start. The image ships version 3.1.2 as a fallback. |
+| `working_directory` | `""` | Folder to start in (default `/config`). |
+| `mistral_api_key` | `""` | Optional key instead of the account sign-in. When set, it is used before the saved sign-in. It is masked in the UI but included in backups. |
+| `auto_approve` | `false` | Starts Vibe with `--auto-approve`, so every tool call runs without asking. **See the security section below.** |
+| `vibe_extra_args` | `""` | Extra flags for `vibe`, for example `--agent plan`. Quoting works as in a shell. |
+| `ha_smart_context` | `true` | Writes `/data/vibe/AGENTS.md` with facts about your Home Assistant (version, entities per domain, add-ons, recent errors). Vibe reads it in every session. Run `ha-context` to refresh it, or `ha-context --full` to also list entity IDs. |
+| `enable_ha_mcp` | `true` | Registers ha-mcp as the MCP server `home_assistant` in Vibe's `config.toml`. With `false`, the entry is removed. |
+| `ha_mcp_version` | `"7.11.0"` | The ha-mcp version to run. |
+| `persistent_apt_packages` | `[]` | Debian packages installed on every start. |
+| `persistent_pip_packages` | `[]` | Python packages installed on every start. |
 
-## Kommandon i terminalen
+## Commands in the terminal
 
 ```bash
-vibe              # starta Vibe
-vibe --continue   # fortsätt senaste konversationen
-vibe --resume     # välj en tidigare konversation
-ha-context        # uppdatera HA-kontexten (AGENTS.md)
-persist-install apt htop        # installera paket som överlever omstarter
+vibe              # start Vibe
+vibe --continue   # continue the most recent conversation
+vibe --resume     # pick an earlier conversation
+ha-context        # refresh the Home Assistant context (AGENTS.md)
+persist-install apt htop        # install packages that survive restarts
 persist-install pip pandas
 ```
 
-Om du avslutar Vibe hamnar du i ett skal i samma tmux-session.
+If you exit Vibe, you get a shell in the same tmux session.
 
-### Terminaltips
+### Terminal tips
 
-- **Ny rad i Vibes prompt:** Shift+Enter eller Ctrl+J.
-- **Kopiera:** dra med musen. Om webbläsaren blockerar urklipp (vanligt med HA över vanlig HTTP), håll Shift (Option på Mac) medan du drar.
-- **Klistra in:** Ctrl+Shift+V.
-- **Egna tmux-inställningar:** lägg dem i `/data/home/.tmux.local.conf`.
+- **New line in Vibe's prompt:** Shift+Enter or Ctrl+J.
+- **Copy:** drag with the mouse. If the browser blocks clipboard access (common with Home Assistant over plain HTTP), hold Shift (Option on Mac) while dragging.
+- **Paste:** Ctrl+Shift+V.
+- **Your own tmux settings:** put them in `/data/home/.tmux.local.conf`.
 
-## Så får Vibe tillgång till Home Assistant
+## How Vibe accesses Home Assistant
 
-- **Filer:** `/config` (HA-konfigurationen), `/addon_configs` och `/share` är monterade med läs- och skrivrätt.
-- **ha-mcp:** Vibe startar `/usr/local/bin/ha-mcp-launch`, som kör ha-mcp mot Supervisor-API:t. Supervisor-token läses först när servern startar och sparas aldrig i `config.toml`. ha-mcp körs på Debians Python 3.13, och beroendena hämtas i bakgrunden vid start.
-- **API:** `SUPERVISOR_TOKEN` finns i terminalens miljö, så Vibe kan även använda `curl` mot `http://supervisor/core/api/...`.
+- **Files:** `/config` (the Home Assistant configuration), `/addon_configs` and `/share` are mounted read-write.
+- **ha-mcp:** Vibe starts `/usr/local/bin/ha-mcp-launch`, which runs ha-mcp against the Supervisor API. The Supervisor token is read only when the server starts and is never stored in `config.toml`. ha-mcp runs on Debian's Python 3.13, and its dependencies are fetched in the background at startup.
+- **API:** `SUPERVISOR_TOKEN` is available in the terminal environment, so Vibe can also use `curl` against `http://supervisor/core/api/...`.
 
-Dina egna MCP-servrar och övriga inställningar i `/data/vibe/config.toml` lämnas orörda. Add-onet ändrar bara posten `home_assistant`.
+Your own MCP servers and other settings in `/data/vibe/config.toml` are left untouched. The add-on only manages the `home_assistant` entry.
 
-## Säkerhet
+## Security
 
-Add-onet ger Vibe stor makt med avsikt. Det kör som root i sin container, har skrivrätt till `/config` och kan styra enheter och ändra automationer via ha-mcp.
+This add-on deliberately gives Vibe a lot of power. It runs as root in its container, has write access to `/config`, and can control devices and change automations through ha-mcp.
 
-- **`auto_approve` tar bort den sista mänskliga kontrollen.** Ett missförstånd, eller en promptinjektion i en fil eller webbsida som Vibe läser, kan då ändra konfigurationen eller styra enheter utan att du tillfrågas. Låt den vara avstängd om du inte medvetet accepterar risken.
-- Webbterminalen nås bara via Home Assistants ingress. Port 7681 är inte publicerad som standard. Om du publicerar den kan vem som helst som når porten få ett root-skal utan inloggning.
-- Mistral Vibe skickar telemetri som standard. Lägg till `enable_telemetry = false` i `/data/vibe/config.toml` för att stänga av den.
+- **`auto_approve` removes the last human checkpoint.** A misunderstanding, or a prompt injection in a file or web page that Vibe reads, can then change your configuration or control devices without asking you. Leave it off unless you knowingly accept that risk.
+- The web terminal is only reachable through Home Assistant ingress. Port 7681 is not published by default. If you publish it, anyone who can reach the port gets a root shell without logging in.
+- Mistral Vibe sends telemetry by default. Add `enable_telemetry = false` to `/data/vibe/config.toml` to turn it off.
 
-## Felsökning
+## Troubleshooting
 
-- **Vibe frågar om inloggning igen:** kontrollera att `/data/vibe/.env` finns, med `ls -la /data/vibe` i skalet.
-- **ha-mcp-verktyg saknas:** kontrollera add-on-loggen efter `ha-mcp ... registered`. Testa servern för hand med `ha-mcp-launch 7.11.0 --prewarm` (det ska avslutas utan fel). Skriv sedan `/mcp` i Vibe.
-- **Bygget misslyckas:** add-onet byggs lokalt och behöver internet för Debian-paket, PyPI och Mistral Vibe.
+- **Vibe asks you to sign in again:** check that `/data/vibe/.env` exists with `ls -la /data/vibe` in the shell.
+- **ha-mcp tools are missing:** look for `ha-mcp ... registered` in the add-on log. Test the server by hand with `ha-mcp-launch 7.11.0 --prewarm` (it should exit without errors). Then type `/mcp` in Vibe.
+- **The build fails:** the add-on is built locally and needs internet access for Debian packages, PyPI and Mistral Vibe. The full build log is under **Settings → System → Logs**, with **Supervisor** selected in the top-right list.

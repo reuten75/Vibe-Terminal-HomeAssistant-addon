@@ -1,0 +1,51 @@
+---
+configuration:
+  auto_launch_vibe:
+    name: Launch Vibe automatically
+    description: >-
+      Start Mistral Vibe as soon as the terminal opens. When off, you get a
+      shell and run `vibe` yourself.
+  vibe_auto_update:
+    name: Keep Mistral Vibe updated
+    description: >-
+      Install and update Mistral Vibe in /data in the background on every
+      start. The version in the image is used as a fallback.
+  working_directory:
+    name: Working directory
+    description: Folder the terminal starts in. Leave empty for /config.
+  mistral_api_key:
+    name: Mistral API key (optional)
+    description: >-
+      Use this key instead of signing in with your Mistral account in the
+      terminal. Masked here, but included in backups.
+  auto_approve:
+    name: Auto-approve all actions
+    description: >-
+      Start Vibe with --auto-approve: every tool call runs without asking,
+      including changes to /config and controlling devices. Risky.
+  vibe_extra_args:
+    name: Extra Vibe arguments
+    description: Extra flags added to every Vibe launch, for example --agent plan.
+  ha_smart_context:
+    name: Home Assistant context
+    description: >-
+      Write AGENTS.md with facts about this Home Assistant (version, entities,
+      add-ons, recent errors) so Vibe knows your setup.
+  enable_ha_mcp:
+    name: Home Assistant MCP server (ha-mcp)
+    description: >-
+      Let Vibe read states, call services and edit automations, scripts and
+      dashboards through ha-mcp.
+  ha_mcp_version:
+    name: ha-mcp version
+    description: The ha-mcp release to run.
+  persistent_apt_packages:
+    name: Persistent Debian packages
+    description: Debian (apt) packages installed on every start.
+  persistent_pip_packages:
+    name: Persistent Python packages
+    description: Python (pip) packages installed on every start.
+network:
+  7681/tcp: >-
+    Direct web terminal access. Not needed for ingress and NOT
+    password-protected: anyone who can reach this port gets a root shell.
